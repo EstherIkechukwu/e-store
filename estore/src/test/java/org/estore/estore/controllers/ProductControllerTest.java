@@ -29,7 +29,7 @@ public class ProductControllerTest {
 
     @Test
     public void testCanAddProduct() throws Exception {
-        String imagePath = "C:\\Users\\Dell\\OneDrive\\Desktop\\e-store\\byte_builder_store\\estore\\src\\test\\resources\\assests\\sayan-majhi-uVb2BMH0PIY-unsplash.jpg";
+        String imagePath = "C:\\Users\\Dell\\OneDrive\\Desktop\\e-store\\estore\\src\\test\\resources\\assests\\sayan-majhi-uVb2BMH0PIY-unsplash.jpg";
         Path image = Paths.get(imagePath);
         mockMvc.perform(multipart("/api/v1/product")
                         .file("media",new MockMultipartFile("image", Files.newInputStream(image)).getBytes())
