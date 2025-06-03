@@ -1,5 +1,6 @@
 package org.estore.estore.integrations;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,9 +15,10 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Slf4j
 public class WalrusCloudServiceTest {
     @Autowired
-    private WalrusCloudService walrusCloudService;
+    private CloudService cloudService;
 
     @Test
     void testCanUploadFile(){
@@ -24,9 +26,10 @@ public class WalrusCloudServiceTest {
         Path path = Paths.get(fileLocation);
         try(var inputStream = Files.newInputStream(path)){
             MultipartFile file = new MockMultipartFile("image", inputStream);
-            String blodId = walrusCloudService.upload(file);
-            assertThat(blodId).isNotNull();
-            assertThat(blodId).isNotEmpty();
+            String blobId = cloudService.upload(file);
+            log.info("blobId : {}", blobId);
+            assertThat(blobId).isNotNull();
+            assertThat(blobId).isNotEmpty();
         }
         catch (IOException exception){
             exception.printStackTrace();
