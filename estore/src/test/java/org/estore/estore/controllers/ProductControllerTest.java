@@ -1,6 +1,5 @@
 package org.estore.estore.controllers;
 
-import org.estore.estore.dto.request.AddProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

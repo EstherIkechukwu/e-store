@@ -9,6 +9,8 @@ public class BeanConfig {
 
     @Bean
     public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration();
         return new ModelMapper();
 
     }
