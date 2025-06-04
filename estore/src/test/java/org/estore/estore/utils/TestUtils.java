@@ -5,6 +5,7 @@ import org.estore.estore.dto.request.CreateOrderRequest;
 import org.estore.estore.dto.request.ItemRequest;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,6 +31,10 @@ public class TestUtils {
             productRequest.setMedia(
                     List.of(
                             new MockMultipartFile("media", imageStream)));
+            productRequest.setDescription("iphone 17");
+            productRequest.setPrice(BigDecimal.valueOf(2_000_000));
+            return productRequest;
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
