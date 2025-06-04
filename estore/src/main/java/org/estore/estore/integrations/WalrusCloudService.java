@@ -52,7 +52,7 @@ public class WalrusCloudService implements CloudService {
         return params;
     }
 
-    private HttpEntity<?> buildUploadRequest(MultipartFile file) {
+    public HttpEntity<?> buildUploadRequest(MultipartFile file) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         Resource resource = file.getResource();
