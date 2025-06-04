@@ -1,42 +1,70 @@
 package org.estore.estore.integrations;
 
+import lombok.RequiredArgsConstructor;
 import org.estore.estore.dto.response.walrus.WalrusUploadResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpMethod.PUT;
 
 @Component
+@RequiredArgsConstructor
 public class WalrusCloudService implements CloudService {
+
+    @Value("${walrus.app.url}")
+    private String walrusUrl;
+
+    @Value("${walrus.app.aggregator}")
+    private String walrusAggregator;
+
+    @Value("${walrus.app.epoch}")
+    private String epoch;
+
+    @Value("${walrus.app.address}")
+    private String walrusUploadAddress;
+
+    private final RestTemplate restTemplate;
+
     @Override
     public String upload(MultipartFile file){
-        String walrusUrl = "https://publisher.walrus-testnet.walrus.space/v1/blobs";
+        return extractBlobIdFrom(restTemplate.exchange(walrusUrl, PUT,
+                buildUploadRequest(file), WalrusUploadResponse.class,
+                createQueryParams()));
+    }
+
+    @Override
+    public byte[] getFileBy(String blobId){
+        ResponseEntity<byte[]> response = restTemplate.getForEntity(walrusAggregator.concat(blobId), byte[].class);
+        return response.getBody();
+    }
+
+    private Map<String, ?> createQueryParams() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("epochs", Integer.parseInt(epoch));
+        params.put("send_object_to", walrusUploadAddress);
+        return params;
+    }
+
+    private HttpEntity<?> buildUploadRequest(MultipartFile file) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("epochs", 5);
-        params.put("send_object_to", "0x8b082a4184f4e6cb83e2b19a8cf8611c1846675991f764ccc5745e7ebf05bcd1");
         Resource resource = file.getResource();
-        HttpEntity<?> requestEntity =
-                new HttpEntity<>(resource, headers);
+        return new HttpEntity<>(resource, headers);
+    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<WalrusUploadResponse> response = restTemplate.exchange(URI.create(walrusUrl), PUT,
-                requestEntity, WalrusUploadResponse.class);
+    private static String extractBlobIdFrom(ResponseEntity<WalrusUploadResponse> response) {
         WalrusUploadResponse walrusUploadResponse = response.getBody();
         boolean isFileAlreadyExists = walrusUploadResponse != null && walrusUploadResponse.getNewlyCreated() == null;
         if (isFileAlreadyExists) {
             return walrusUploadResponse.getAlreadyCertified().getBlobId();
         }
         return walrusUploadResponse.getNewlyCreated().getBlobObject().getBlobId();
-
     }
 }
