@@ -44,4 +44,19 @@ public class OrderServiceImpl implements OrderService {
         orderResponse.setMessage("Order placed Successfully");
         return orderResponse;
     }
+
+    @Override
+    public String cancelOrder(String orderId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()->new RuntimeException("Order not found"));
+        if ("IN_PROGRESS".equals(order.getOrderStatus())){
+            order.setOrderStatus("CANCELED");
+            orderRepository.save(order);
+            return "Order" + orderId + "has been cancelled";
+        }
+        else{
+            return "Order" + orderId + "is unable to be cancelled" + order.getOrderStatus();
+        }
+    }
+
 }

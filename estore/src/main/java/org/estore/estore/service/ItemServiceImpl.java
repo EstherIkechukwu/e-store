@@ -10,9 +10,16 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
+
     @Override
     public Item getItemBy(String id) {
         return itemRepository.findById(id)
                 .orElseThrow(()->new ItemNotFoundException("item not found"));
     }
+
+
+
+
+
 }
+

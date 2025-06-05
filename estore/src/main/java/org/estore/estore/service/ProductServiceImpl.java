@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService{
@@ -39,4 +41,29 @@ public class ProductServiceImpl implements ProductService{
         String url = "localhost:8080/api/v1/media/" + blobId;
         product.getMedia().add(blobId);
     }
+
+    @Override
+    public Product updateProductQuantity(String id, Long newQuantity) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        product.setQuantity(newQuantity);
+        return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        productRepository.delete(product);
+    }
+
+    @Override
+    public Product updateProductPrice(String id, BigDecimal newPrice){
+        Product product = productRepository.findById(id)
+                .orElseThrow(()->new ProductNotFoundException("Product not found"));
+        product.setPrice(newPrice);
+        return productRepository.save(product);
+    }
+
+
 }

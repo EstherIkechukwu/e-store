@@ -15,6 +15,7 @@ public class Order {
     @GeneratedValue(strategy= GenerationType.UUID)
     private String id;
     private String cartId;
+    private String orderStatus;
 
     public Order(CreateOrderRequest orderRequest) {
         this.cartId = orderRequest.getCartId();

@@ -5,4 +5,6 @@ import org.estore.estore.dto.response.CreateOrderResponse;
 
 public interface OrderService {
     CreateOrderResponse create(CreateOrderRequest order);
+
+    String cancelOrder(String orderId);
 }
