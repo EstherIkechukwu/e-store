@@ -1,10 +1,12 @@
 package org.estore.estore.integrations;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.estore.estore.dto.response.walrus.WalrusUploadResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ public class WalrusCloudService implements CloudService {
     private String walrusUploadAddress;
 
     private final RestTemplate restTemplate;
+
 
     @Override
     public String upload(MultipartFile file){
